@@ -271,14 +271,26 @@ Public Class Importer
                 'init variables
                 Dim isFirstRevision = (svnFromRevision = svnRevision)
 
-                'do the work
-                tfsReproduceRevision(svn.GetLog(svnRevision, True),
-                                     svn,
-                                     tfsWorkspace,
-                                     userMap,
-                                     svn2tfsRevisionMap,
-                                     isFirstRevision,
-                                     hasFirstRevisionToBeOverriddenWithRecursiveAdds)
+                Dim retriesRemaining = 5
+                Try
+DoTheWork:
+                    'do the work
+                    tfsReproduceRevision(svn.GetLog(svnRevision, True),
+                                         svn,
+                                         tfsWorkspace,
+                                         userMap,
+                                         svn2tfsRevisionMap,
+                                         isFirstRevision,
+                                         hasFirstRevisionToBeOverriddenWithRecursiveAdds)
+                Catch ex As Exception
+                    If (retriesRemaining > 0) Then
+                        Console.WriteLine(ex.Message)
+                        Console.WriteLine("Retrying...")
+                        retriesRemaining = retriesRemaining - 1
+                        GoTo DoTheWork
+                    End If
+                    Throw
+                End Try
 
                 'progress
                 RaiseEvent ProgressChange(currentStep, totalSteps)
