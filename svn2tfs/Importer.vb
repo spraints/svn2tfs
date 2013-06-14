@@ -532,7 +532,7 @@ DoTheWork:
 
                 If TypeOf svnItemInfo Is IO.FileInfo Then
 
-                    svnItemInfo.CopyTo(tfsItemLocalFullPath, False)
+                    svnItemInfo.CopyTo(tfsItemLocalFullPath, True)
 
                 Else
 
