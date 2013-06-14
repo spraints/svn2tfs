@@ -304,7 +304,14 @@ Public Class Importer
         Dim startTime = Now
 
         'init variables
-        Dim mappedUser = userMap(svnLog.Author)
+        Dim mappedUser As String
+        If (Not String.IsNullOrEmpty(svnLog.Author)) Then
+            userMap.TryGetValue(svnLog.Author, mappedUser)
+        End If
+        If (String.IsNullOrEmpty(mappedUser)) Then
+            mappedUser = Nothing
+            Console.WriteLine("Unable to map SVN author {0}", svnLog.Author)
+        End If
 
         'SVN Update / Checkout
         svnUpdate(svnLog.Revision,

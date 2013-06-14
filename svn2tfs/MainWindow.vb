@@ -249,6 +249,11 @@ Public Class MainWindow
                 toRevision = Long.Parse(toRevisionTextBox.Text)
             End If
 
+            Dim authors As New Dictionary(Of String, String)
+            If (userMapFileNameTextBox.Text <> "") Then
+                authors = LoadUserMapFromFile(userMapFileNameTextBox.Text)
+            End If
+
             importer.Import(New Uri(svnUrlTextBox.Text),
                             svnUserNameTextBox.Text,
                             svnPasswordTextBox.Text,
@@ -259,7 +264,7 @@ Public Class MainWindow
                             tfsCollectionTextBox.Text,
                             tfsProjectTextBox.Text,
                             tfsDirectoryTextBox.Text,
-                            LoadUserMapFromFile(userMapFileNameTextBox.Text),
+                            authors,
                             cleanUpTFSCheckBox.Checked,
                             overrideFirstRevisionRadioButton.Checked)
 
